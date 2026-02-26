@@ -1,6 +1,6 @@
-#include "register_types.h"
+#include "register_types.hpp"
 
-#include "gdexample.h"
+#include "gdexample.hpp"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
