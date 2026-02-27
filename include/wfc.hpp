@@ -16,6 +16,7 @@ private:
 
 	WaveState_T m_wave_state;
 	TileWeights_T m_tile_weights;
+	int m_test;
 
 	void init_wave_state();
 
@@ -23,8 +24,12 @@ protected:
 	static void _bind_methods();
 
 public:
+	WFCGenerator2D();
 	WFCGenerator2D(int width, int height, const Dictionary& tile_wights);
 
+	void test();
+	int get_test();
+	void set_test(int p);
 };
 
 }
