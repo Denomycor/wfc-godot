@@ -1,5 +1,4 @@
-#ifndef GDEXAMPLE_H
-#define GDEXAMPLE_H
+#pragma once
 
 #include <godot_cpp/classes/sprite2d.hpp>
 
@@ -22,6 +21,4 @@ public:
 };
 
 }
-
-#endif
 
