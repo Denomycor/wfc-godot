@@ -4,6 +4,7 @@
 using namespace godot;
 
 void GDExample::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("test"), &GDExample::test);
 }
 
 GDExample::GDExample() {
@@ -24,3 +25,6 @@ void GDExample::_process(double delta) {
 	set_position(new_position);
 }
 
+void GDExample::test(){
+
+}

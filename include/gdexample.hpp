@@ -19,6 +19,7 @@ public:
 	~GDExample();
 
 	void _process(double delta) override;
+	void test();
 };
 
 }
