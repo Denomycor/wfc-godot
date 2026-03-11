@@ -2,3 +2,6 @@
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.5
+[submodule "wfc-cpp"]
+	path = wfc-cpp
+	url = git@github.com:Denomycor/wfc-cpp.git
