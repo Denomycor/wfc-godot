@@ -1,22 +1,31 @@
 #!/usr/bin/env python
 import os
-import sys
+from SCons.Script import Glob, Default, SConscript
 
+# --- 1. Load godot-cpp environment ---
 env = SConscript("godot-cpp/SConstruct")
 
-# For reference:
-# - CCFLAGS are compilation flags shared between C and C++
-# - CFLAGS are for C-specific compilation flags
-# - CXXFLAGS are for C++-specific compilation flags
-# - CPPFLAGS are for pre-processor flags
-# - CPPDEFINES are for pre-processor defines
-# - LINKFLAGS are for linking flags
+# --- 2. Enable compilation database ---
+env.Tool("compilation_db")
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["include/"])
+# --- 3. Add include paths ---
+env.Append(CPPPATH=[
+    "include",                  # your extension headers
+    "godot-cpp/include",
+    "godot-cpp/gen/include",
+    "godot-cpp/gdextension",
+    "wfc-cpp/include"           # wfc-cpp headers
+])
+
+# --- 4. Build wfc-cpp directly via its SConstruct ---
+# This will modify 'env' in place, like godot-cpp
+SConscript("wfc-cpp/SConstruct", exports={"env": env})
+
+# --- 5. Build your extension sources ---
 VariantDir("build", "src", duplicate=0)
 sources = Glob("src/*.cpp")
 
+# --- 6. Platform-specific library build ---
 if env["platform"] == "macos":
     library = env.SharedLibrary(
         "demo/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
@@ -41,4 +50,6 @@ else:
         source=sources,
     )
 
+# --- 7. Default target and compile_commands.json ---
 Default(library)
+env.CompilationDatabase("compile_commands.json")

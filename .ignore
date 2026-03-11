@@ -1,4 +1,4 @@
 compile_commands.json
 extension_api.json
-wfc-cpp/
-godot-cpp/
+# wfc-cpp/
+# godot-cpp/
