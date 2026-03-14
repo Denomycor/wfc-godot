@@ -1,5 +1,6 @@
 #include "register_types.hpp"
 #include "gdexample.hpp"
+// #include "wfc_engine2d.hpp"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>

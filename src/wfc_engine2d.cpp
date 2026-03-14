@@ -1,9 +1,7 @@
 #include "wfc_engine2d.hpp"
-#include "abstract_wfc.hpp"
 #include "godot_cpp/classes/global_constants.hpp"
 #include "godot_cpp/core/binder_common.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
-#include "wfc.hpp"
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
@@ -24,11 +22,7 @@ void WFCEngine2D::_bind_methods() {
 
 
 WFCEngine2D::STATUS WFCEngine2D::get_status(){
-    if(!valid){
-        return WFCEngine2D::NOT_VALID_STATUS;
-    }
-
-	switch (wfc_generator.get_status()) {
+	if(valid) switch (wfc_generator.get_status()) {
 	case wfc::AbstractWFC::NOT_INIT_STATUS:
 		return WFCEngine2D::NOT_INIT_STATUS;
 	case wfc::AbstractWFC::READY_STATUS:
@@ -41,6 +35,8 @@ WFCEngine2D::STATUS WFCEngine2D::get_status(){
 		return WFCEngine2D::CONTRADICTION_STATUS;
 	  break;
     }
+
+    return WFCEngine2D::NOT_VALID_STATUS;
 }
 
 
