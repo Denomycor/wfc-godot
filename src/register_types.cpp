@@ -1,5 +1,6 @@
 #include "register_types.hpp"
 #include "gdexample.hpp"
+#include "wfc_engine2d.hpp"
 // #include "wfc_engine2d.hpp"
 
 #include <gdextension_interface.h>
@@ -14,6 +15,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	}
 
 	GDREGISTER_RUNTIME_CLASS(GDExample);
+	GDREGISTER_RUNTIME_CLASS(WFCEngine2D);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

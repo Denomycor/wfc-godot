@@ -1,34 +1,21 @@
 #!/usr/bin/env python
 import os
-from SCons.Script import Glob, Default, SConscript
+import sys
 
-# --- Load godot-cpp environment ---
 env = SConscript("godot-cpp/SConstruct")
 
-env.Tool("compilation_db")
+# For reference:
+# - CCFLAGS are compilation flags shared between C and C++
+# - CFLAGS are for C-specific compilation flags
+# - CXXFLAGS are for C++-specific compilation flags
+# - CPPFLAGS are for pre-processor flags
+# - CPPDEFINES are for pre-processor defines
+# - LINKFLAGS are for linking flags
 
-# --- Include paths ---
-env.Append(CPPPATH=[
-    "include",
-    "src",
-    "thirdparty/wfc/include",
-    "godot-cpp/include",
-    "godot-cpp/gen/include",
-    "godot-cpp/gdextension"
-])
+# tweak this if you want to use different folders, or more folders, to store your source code in.
+env.Append(CPPPATH=["src/", "include/", "wfc-cpp/src/", "wfc-cpp/include/"])
+sources = Glob("src/*.cpp") + Glob("wfc-cpp/src/*.cpp")
 
-# --- Variant dir for extension ---
-VariantDir("build", "src", duplicate=0)
-
-# --- Extension sources ---
-extension_sources = Glob("build/*.cpp")
-
-# --- WFC sources ---
-wfc_sources = Glob("thirdparty/wfc/src/*.cpp")
-
-sources = extension_sources + wfc_sources
-
-# --- Platform build ---
 if env["platform"] == "macos":
     library = env.SharedLibrary(
         "demo/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
@@ -36,31 +23,22 @@ if env["platform"] == "macos":
         ),
         source=sources,
     )
-
 elif env["platform"] == "ios":
     if env["ios_simulator"]:
         library = env.StaticLibrary(
-            "demo/bin/libgdexample.{}.{}.simulator.a".format(
-                env["platform"], env["target"]
-            ),
+            "demo/bin/libgdexample.{}.{}.simulator.a".format(env["platform"], env["target"]),
             source=sources,
         )
     else:
         library = env.StaticLibrary(
-            "demo/bin/libgdexample.{}.{}.a".format(
-                env["platform"], env["target"]
-            ),
+            "demo/bin/libgdexample.{}.{}.a".format(env["platform"], env["target"]),
             source=sources,
         )
-
 else:
     library = env.SharedLibrary(
-        "demo/bin/libgdexample{}{}".format(
-            env["suffix"], env["SHLIBSUFFIX"]
-        ),
+        "demo/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
 Default(library)
 
-env.CompilationDatabase("compile_commands.json")
