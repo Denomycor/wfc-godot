@@ -17,8 +17,8 @@ void WFCEngine2D::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
     ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
-    ClassDB::bind_method(D_METHOD("collapse_cell"), &WFCEngine2D::collapse_cell);
-    ClassDB::bind_method(D_METHOD("propagate_constraints"), &WFCEngine2D::propagate_constraints);
+    ClassDB::bind_method(D_METHOD("collapse_cell", "cell"), &WFCEngine2D::collapse_cell);
+    ClassDB::bind_method(D_METHOD("propagate_constraints", "cell"), &WFCEngine2D::propagate_constraints);
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
