@@ -89,7 +89,7 @@ WFCEngine2D::~WFCEngine2D(){}
 
 void WFCEngine2D::_setup(){
     wfc_generator.stepped.connect([this](...){
-        emit_signal("stepped", this);
+        emit_signal("stepped", Ref<WFCEngine2D>(this));
     });
 }
 
