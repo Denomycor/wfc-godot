@@ -22,13 +22,20 @@ protected:
 
 public:
 	enum STATUS {
-		NOT_INIT_STATUS,
-		READY_STATUS,
-		RUNNING_STATUS,
-		FINISHED_STATUS,
-		CONTRADICTION_STATUS,
+		NOT_INIT_STATUS = wfc::AbstractWFC::NOT_INIT_STATUS,
+		READY_STATUS = wfc::AbstractWFC::READY_STATUS,
+		RUNNING_STATUS = wfc::AbstractWFC::RUNNING_STATUS,
+		FINISHED_STATUS = wfc::AbstractWFC::FINISHED_STATUS,
+		CONTRADICTION_STATUS = wfc::AbstractWFC::CONTRADICTION_STATUS,
 		NOT_VALID_STATUS,
 	};
+
+    enum DIRECTIONS {
+        UP = wfc::UP,
+        DOWN = wfc::DOWN,
+        LEFT = wfc::LEFT,
+        RIGHT = wfc::RIGHT,
+    };
 
     static Ref<WFCEngine2D> make_generator(const Vector2i& size, const PackedFloat64Array& weights, bool periodic);
 
@@ -42,7 +49,8 @@ public:
 	Vector2i select_cell();
 	void collapse_cell(const Vector2i& cell);
 	void propagate_constraints(const Vector2i& cell);
-
+    
+    void change_constraint_rule(int idx, DIRECTIONS direction, int n_idx, bool allow);
 
     void init();
     bool step();

@@ -21,11 +21,17 @@ void WFCEngine2D::_bind_methods() {
     BIND_ENUM_CONSTANT(CONTRADICTION_STATUS);
     BIND_ENUM_CONSTANT(NOT_VALID_STATUS);
 
+    BIND_ENUM_CONSTANT(UP);
+    BIND_ENUM_CONSTANT(DOWN);
+    BIND_ENUM_CONSTANT(LEFT);
+    BIND_ENUM_CONSTANT(RIGHT);
+
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
     ClassDB::bind_method(D_METHOD("get_size"), &WFCEngine2D::get_size);
     ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
     ClassDB::bind_method(D_METHOD("collapse_cell", "cell"), &WFCEngine2D::collapse_cell);
     ClassDB::bind_method(D_METHOD("propagate_constraints", "cell"), &WFCEngine2D::propagate_constraints);
+    ClassDB::bind_method(D_METHOD("change_constraint_rule", "idx", "direction", "n_idx", "allow"), &WFCEngine2D::change_constraint_rule);
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
@@ -33,7 +39,9 @@ void WFCEngine2D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size"), "", "get_size");
+
     ADD_SIGNAL(MethodInfo("stepped", PropertyInfo(Variant::OBJECT, "wfc", PROPERTY_HINT_RESOURCE_TYPE, "WFCEngine2D")));
+    ADD_SIGNAL(MethodInfo("finished", PropertyInfo(Variant::OBJECT, "wfc", PROPERTY_HINT_RESOURCE_TYPE, "WFCEngine2D")));
 }
 
 
@@ -91,6 +99,9 @@ void WFCEngine2D::_setup(){
     wfc_generator.stepped.connect([this](...){
         emit_signal("stepped", Ref<WFCEngine2D>(this));
     });
+    wfc_generator.finished.connect([this](...){
+        emit_signal("finished", Ref<WFCEngine2D>(this));
+    });
 }
 
 
@@ -117,6 +128,11 @@ void WFCEngine2D::propagate_constraints(const Vector2i& cell){
 }
 
 
+void WFCEngine2D::change_constraint_rule(int idx, DIRECTIONS direction, int n_idx, bool allow){
+    wfc_generator.get_constraints().change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
+}
+
+
 void WFCEngine2D::init(){
     wfc_generator.init();
 }
@@ -132,6 +148,7 @@ bool WFCEngine2D::run(){
 }
 
 VARIANT_ENUM_CAST(WFCEngine2D::STATUS)
+VARIANT_ENUM_CAST(WFCEngine2D::DIRECTIONS)
 
 // vim: ts=4 sts=4 sw=4 et
 
