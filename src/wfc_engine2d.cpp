@@ -2,6 +2,10 @@
 #include "abstract_wfc.hpp"
 #include "godot_cpp/classes/global_constants.hpp"
 #include "godot_cpp/core/binder_common.hpp"
+#include "godot_cpp/core/object.hpp"
+#include "godot_cpp/core/property_info.hpp"
+#include "godot_cpp/variant/packed_float64_array.hpp"
+#include "godot_cpp/variant/variant.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
 #include "wfc.hpp"
 #include <godot_cpp/core/class_db.hpp>
@@ -18,6 +22,7 @@ void WFCEngine2D::_bind_methods() {
     BIND_ENUM_CONSTANT(NOT_VALID_STATUS);
 
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
+    ClassDB::bind_method(D_METHOD("get_size"), &WFCEngine2D::get_size);
     ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
     ClassDB::bind_method(D_METHOD("collapse_cell", "cell"), &WFCEngine2D::collapse_cell);
     ClassDB::bind_method(D_METHOD("propagate_constraints", "cell"), &WFCEngine2D::propagate_constraints);
@@ -27,6 +32,8 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "periodic"), &WFCEngine2D::make_generator);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size"), "", "get_size");
+    ADD_SIGNAL(MethodInfo("stepped", PropertyInfo(Variant::OBJECT, "wfc", PROPERTY_HINT_RESOURCE_TYPE, "WFCEngine2D")));
 }
 
 
@@ -48,13 +55,16 @@ WFCEngine2D::STATUS WFCEngine2D::get_status(){
     return WFCEngine2D::NOT_VALID_STATUS;
 }
 
+Vector2i WFCEngine2D::get_size(){
+    return { static_cast<int32_t>(wfc_generator.get_wave().get_width()),
+        static_cast<int32_t>(wfc_generator.get_wave().get_height()) };
+}
 
-Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const Array &weights, bool periodic){
+
+Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedFloat64Array &weights, bool periodic){
     wfc::TileWeights convert(weights.size());
     for(const auto& e : weights){
-        if(e.get_type() == Variant::FLOAT){
-            convert.push_back(static_cast<double>(e));
-        }
+        convert.emplace_back(static_cast<double>(e));
     }
     return memnew(WFCEngine2D( {size.x, size.y, 1}, convert, periodic));
 }
@@ -63,19 +73,24 @@ Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const Array &
 WFCEngine2D::WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic)
 : wfc_generator(size, weights, periodic), valid(true)
 {
-
+    _setup();
 }
 
 
 WFCEngine2D::WFCEngine2D()
 : wfc_generator({1,1,1}, {1}), valid(false)
 {
-
+    _setup();
 }
 
 
-WFCEngine2D::~WFCEngine2D(){
+WFCEngine2D::~WFCEngine2D(){}
 
+
+void WFCEngine2D::_setup(){
+    wfc_generator.stepped.connect([this](...){
+        emit_signal("stepped", this);
+    });
 }
 
 
