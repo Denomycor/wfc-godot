@@ -1,7 +1,9 @@
 #include "wfc_engine2d.hpp"
+#include "abstract_wfc.hpp"
 #include "godot_cpp/classes/global_constants.hpp"
 #include "godot_cpp/core/binder_common.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
+#include "wfc.hpp"
 #include <godot_cpp/core/class_db.hpp>
 
 using namespace godot;
@@ -22,6 +24,7 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
+    ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "periodic"), &WFCEngine2D::make_generator);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 }
@@ -43,6 +46,24 @@ WFCEngine2D::STATUS WFCEngine2D::get_status(){
     }
 
     return WFCEngine2D::NOT_VALID_STATUS;
+}
+
+
+WFCEngine2D WFCEngine2D::make_generator(const Vector2i &size, const Array &weights, bool periodic){
+    wfc::TileWeights convert(weights.size());
+    for(const auto& e : weights){
+        if(e.get_type() == Variant::FLOAT){
+            convert.push_back(static_cast<double>(e));
+        }
+    }
+    return WFCEngine2D({size.x, size.y, 1}, convert, periodic);
+}
+
+
+WFCEngine2D::WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic)
+: wfc_generator(size, weights, periodic), valid(true)
+{
+
 }
 
 

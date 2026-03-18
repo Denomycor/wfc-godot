@@ -1,7 +1,9 @@
 #pragma once
 
+#include "abstract_wfc.hpp"
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "../wfc-cpp/include/wfc.hpp"
+#include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
 
 
@@ -26,7 +28,10 @@ public:
 		NOT_VALID_STATUS,
 	};
 
-	WFCEngine2D();
+    static WFCEngine2D make_generator(const Vector2i& size, const Array& weights, bool periodic);
+
+	WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic);
+    WFCEngine2D();
 	~WFCEngine2D();
 	
 	STATUS get_status();
