@@ -49,14 +49,14 @@ WFCEngine2D::STATUS WFCEngine2D::get_status(){
 }
 
 
-WFCEngine2D WFCEngine2D::make_generator(const Vector2i &size, const Array &weights, bool periodic){
+Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const Array &weights, bool periodic){
     wfc::TileWeights convert(weights.size());
     for(const auto& e : weights){
         if(e.get_type() == Variant::FLOAT){
             convert.push_back(static_cast<double>(e));
         }
     }
-    return WFCEngine2D({size.x, size.y, 1}, convert, periodic);
+    return memnew(WFCEngine2D( {size.x, size.y, 1}, convert, periodic));
 }
 
 

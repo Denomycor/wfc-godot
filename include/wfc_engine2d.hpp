@@ -28,7 +28,7 @@ public:
 		NOT_VALID_STATUS,
 	};
 
-    static WFCEngine2D make_generator(const Vector2i& size, const Array& weights, bool periodic);
+    static Ref<WFCEngine2D> make_generator(const Vector2i& size, const Array& weights, bool periodic);
 
 	WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic);
     WFCEngine2D();
