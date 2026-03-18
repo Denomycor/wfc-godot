@@ -16,6 +16,12 @@ void WFCEngine2D::_bind_methods() {
     BIND_ENUM_CONSTANT(NOT_VALID_STATUS);
 
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
+    ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
+    ClassDB::bind_method(D_METHOD("collapse_cell"), &WFCEngine2D::collapse_cell);
+    ClassDB::bind_method(D_METHOD("propagate_constraints"), &WFCEngine2D::propagate_constraints);
+    ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
+    ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
+    ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 }
