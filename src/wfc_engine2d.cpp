@@ -26,6 +26,15 @@ void WFCEngine2D::_bind_methods() {
     BIND_ENUM_CONSTANT(LEFT);
     BIND_ENUM_CONSTANT(RIGHT);
 
+    BIND_ENUM_CONSTANT(IDENTITY);
+    BIND_ENUM_CONSTANT(ROT90);
+    BIND_ENUM_CONSTANT(ROT180);
+    BIND_ENUM_CONSTANT(ROT270);
+    BIND_ENUM_CONSTANT(VFLIP);
+    BIND_ENUM_CONSTANT(HFLIP);
+    BIND_ENUM_CONSTANT(HFLIPROT90);
+    BIND_ENUM_CONSTANT(HFLIPROT270);
+
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
     ClassDB::bind_method(D_METHOD("get_size"), &WFCEngine2D::get_size);
     ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
@@ -36,6 +45,9 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
     ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "periodic"), &WFCEngine2D::make_generator);
+    ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &WFCEngine2D::generate_variant_rule);
+    ClassDB::bind_method(D_METHOD("get_label", "idx"), &WFCEngine2D::get_label);
+    ClassDB::bind_method(D_METHOD("set_label", "idx", "label"), &WFCEngine2D::set_label);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size"), "", "get_size");
@@ -45,23 +57,14 @@ void WFCEngine2D::_bind_methods() {
 }
 
 
-WFCEngine2D::STATUS WFCEngine2D::get_status(){
-	if(valid) switch (wfc_generator.get_status()) {
-	case wfc::AbstractWFC::NOT_INIT_STATUS:
-		return WFCEngine2D::NOT_INIT_STATUS;
-	case wfc::AbstractWFC::READY_STATUS:
-		return WFCEngine2D::READY_STATUS;
-	case wfc::AbstractWFC::RUNNING_STATUS:
-		return WFCEngine2D::RUNNING_STATUS;
-	case wfc::AbstractWFC::FINISHED_STATUS:
-		return WFCEngine2D::FINISHED_STATUS;
-	case wfc::AbstractWFC::CONTRADICTION_STATUS:
-		return WFCEngine2D::CONTRADICTION_STATUS;
-	  break;
+WFCEngine2D::Status WFCEngine2D::get_status(){
+	if(valid){
+        return static_cast<Status>(wfc_generator.get_status());
+    } else{
+        return WFCEngine2D::NOT_VALID_STATUS;
     }
-
-    return WFCEngine2D::NOT_VALID_STATUS;
 }
+
 
 Vector2i WFCEngine2D::get_size(){
     return { static_cast<int32_t>(wfc_generator.get_wave().get_width()),
@@ -74,19 +77,19 @@ Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedF
     for(const auto& e : weights){
         convert.emplace_back(static_cast<double>(e));
     }
-    return memnew(WFCEngine2D( {size.x, size.y, 1}, convert, periodic));
+    return memnew(WFCEngine2D({size.x, size.y, 1}, convert, periodic));
 }
 
 
 WFCEngine2D::WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic)
-: wfc_generator(size, weights, periodic), valid(true)
+: wfc_generator(size, weights, periodic), labels(weights.size()), valid(true)
 {
     _setup();
 }
 
 
 WFCEngine2D::WFCEngine2D()
-: wfc_generator({1,1,1}, {1}), valid(false)
+: wfc_generator({1,1,1}, {1}), labels(), valid(false)
 {
     _setup();
 }
@@ -128,8 +131,23 @@ void WFCEngine2D::propagate_constraints(const Vector2i& cell){
 }
 
 
-void WFCEngine2D::change_constraint_rule(int idx, DIRECTIONS direction, int n_idx, bool allow){
+void WFCEngine2D::change_constraint_rule(int idx, Directions direction, int n_idx, bool allow){
     wfc_generator.get_constraints().change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
+}
+
+
+void WFCEngine2D::generate_variant_rule(int idx, Variants variant){
+    wfc::generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.get_weights(), wfc_generator.get_constraints(), labels);
+}
+
+
+void WFCEngine2D::set_label(int idx, const String& label){
+    labels[idx] = label.utf8().get_data();
+}
+
+
+String WFCEngine2D::get_label(int idx){
+    return String::utf8(labels[idx].c_str());
 }
 
 
@@ -147,8 +165,9 @@ bool WFCEngine2D::run(){
     return wfc_generator.run();
 }
 
-VARIANT_ENUM_CAST(WFCEngine2D::STATUS)
-VARIANT_ENUM_CAST(WFCEngine2D::DIRECTIONS)
+VARIANT_ENUM_CAST(WFCEngine2D::Status)
+VARIANT_ENUM_CAST(WFCEngine2D::Directions)
+VARIANT_ENUM_CAST(WFCEngine2D::Variants)
 
 // vim: ts=4 sts=4 sw=4 et
 
