@@ -5,6 +5,7 @@
 #include "godot_cpp/core/object.hpp"
 #include "godot_cpp/core/property_info.hpp"
 #include "godot_cpp/variant/packed_float64_array.hpp"
+#include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/variant.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
 #include "wfc.hpp"
@@ -48,6 +49,7 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &WFCEngine2D::generate_variant_rule);
     ClassDB::bind_method(D_METHOD("get_label", "idx"), &WFCEngine2D::get_label);
     ClassDB::bind_method(D_METHOD("set_label", "idx", "label"), &WFCEngine2D::set_label);
+    ClassDB::bind_method(D_METHOD("get_result"), &WFCEngine2D::get_result);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size"), "", "get_size");
@@ -148,6 +150,16 @@ void WFCEngine2D::set_label(int idx, const String& label){
 
 String WFCEngine2D::get_label(int idx){
     return String::utf8(labels[idx].c_str());
+}
+
+
+PackedInt32Array WFCEngine2D::get_result(){
+    auto res = wfc_generator.get_result();
+    PackedInt32Array out;
+    for(const auto& e : res){
+        out.push_back(e);
+    }
+    return out;
 }
 
 
