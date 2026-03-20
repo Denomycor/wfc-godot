@@ -17,11 +17,11 @@ env.Append(CPPPATH=["src/", "include/", "wfc-cpp/src/", "wfc-cpp/include/"])
 sources = Glob("src/*.cpp") + Glob("wfc-cpp/src/*.cpp")
 
 if env["target"] in ["editor", "template_debug"]:
-try:
-    doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
-    sources.append(doc_data)
-except AttributeError:
-    print("Not including class reference as we're targeting a pre-4.3 baseline.")
+    try:
+        doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("doc_classes/*.xml"))
+        sources.append(doc_data)
+    except AttributeError:
+        print("Not including class reference as we're targeting a pre-4.3 baseline.")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
