@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="WFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="change_constraint_rule">
+			<return type="void" />
+			<param index="0" name="idx" type="int" />
+			<param index="1" name="direction" type="int" enum="WFCEngine2D.DIRECTIONS" />
+			<param index="2" name="n_idx" type="int" />
+			<param index="3" name="allow" type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="collapse_cell">
+			<return type="void" />
+			<param index="0" name="cell" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="init">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="make_generator" qualifiers="static">
+			<return type="WFCEngine2D" />
+			<param index="0" name="size" type="Vector2i" />
+			<param index="1" name="weights" type="PackedFloat64Array" />
+			<param index="2" name="periodic" type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="propagate_constraints">
+			<return type="void" />
+			<param index="0" name="cell" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="run">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+		<method name="select_cell">
+			<return type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="step">
+			<return type="bool" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="size" type="Vector2i" setter="" getter="get_size" default="Vector2i(1, 1)">
+		</member>
+		<member name="status" type="int" setter="" getter="get_status" enum="WFCEngine2D.STATUS" default="5">
+		</member>
+	</members>
+	<signals>
+		<signal name="finished">
+			<param index="0" name="wfc" type="WFCEngine2D" />
+			<description>
+			</description>
+		</signal>
+		<signal name="stepped">
+			<param index="0" name="wfc" type="WFCEngine2D" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+	<constants>
+		<constant name="NOT_INIT_STATUS" value="0" enum="STATUS">
+		</constant>
+		<constant name="READY_STATUS" value="1" enum="STATUS">
+		</constant>
+		<constant name="RUNNING_STATUS" value="2" enum="STATUS">
+		</constant>
+		<constant name="FINISHED_STATUS" value="3" enum="STATUS">
+		</constant>
+		<constant name="CONTRADICTION_STATUS" value="4" enum="STATUS">
+		</constant>
+		<constant name="NOT_VALID_STATUS" value="5" enum="STATUS">
+		</constant>
+		<constant name="UP" value="0" enum="DIRECTIONS">
+		</constant>
+		<constant name="DOWN" value="1" enum="DIRECTIONS">
+		</constant>
+		<constant name="LEFT" value="2" enum="DIRECTIONS">
+		</constant>
+		<constant name="RIGHT" value="3" enum="DIRECTIONS">
+		</constant>
+	</constants>
+</class>
