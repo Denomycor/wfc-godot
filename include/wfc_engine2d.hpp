@@ -15,7 +15,6 @@ class WFCEngine2D : public RefCounted{
 	GDCLASS(WFCEngine2D, RefCounted)
 private:
 	wfc::WFC wfc_generator;
-    wfc::TileLabels labels;
 	bool valid;
 
     void _setup();
@@ -51,9 +50,9 @@ public:
         HFLIPROT270 = wfc::HFLIPROT270,
     };
 
-    static Ref<WFCEngine2D> make_generator(const Vector2i& size, const PackedFloat64Array& weights, bool periodic);
+    static Ref<WFCEngine2D> make_generator(const Vector2i& size, const PackedFloat64Array& weights, int seed, bool periodic);
 
-	WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic);
+	WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, int seed, bool periodic);
     WFCEngine2D();
 	~WFCEngine2D();
 	

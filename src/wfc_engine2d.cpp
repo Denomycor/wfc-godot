@@ -45,7 +45,7 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
-    ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "periodic"), &WFCEngine2D::make_generator);
+    ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "seed", "periodic"), &WFCEngine2D::make_generator);
     ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &WFCEngine2D::generate_variant_rule);
     ClassDB::bind_method(D_METHOD("get_label", "idx"), &WFCEngine2D::get_label);
     ClassDB::bind_method(D_METHOD("set_label", "idx", "label"), &WFCEngine2D::set_label);
@@ -74,24 +74,24 @@ Vector2i WFCEngine2D::get_size(){
 }
 
 
-Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedFloat64Array &weights, bool periodic){
+Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedFloat64Array &weights, int seed, bool periodic){
     wfc::TileWeights convert(weights.size());
     for(const auto& e : weights){
         convert.emplace_back(static_cast<double>(e));
     }
-    return memnew(WFCEngine2D({size.x, size.y, 1}, convert, periodic));
+    return memnew(WFCEngine2D({size.x, size.y, 1}, convert, seed, periodic));
 }
 
 
-WFCEngine2D::WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, bool periodic)
-: wfc_generator(size, weights, periodic), labels(weights.size()), valid(true)
+WFCEngine2D::WFCEngine2D(const wfc::Vec3u& size, const wfc::TileWeights& weights, int seed, bool periodic)
+: wfc_generator(size, weights, seed, periodic), valid(true)
 {
     _setup();
 }
 
 
 WFCEngine2D::WFCEngine2D()
-: wfc_generator({1,1,1}, {1}), labels(), valid(false)
+: wfc_generator({1,1,1}, {1}), valid(false)
 {
     _setup();
 }
@@ -134,22 +134,22 @@ void WFCEngine2D::propagate_constraints(const Vector2i& cell){
 
 
 void WFCEngine2D::change_constraint_rule(int idx, Directions direction, int n_idx, bool allow){
-    wfc_generator.get_constraints().change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
+    wfc_generator.constraints.change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
 }
 
 
 void WFCEngine2D::generate_variant_rule(int idx, Variants variant){
-    wfc::generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.get_weights(), wfc_generator.get_constraints(), labels);
+    wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights, wfc_generator.labels);
 }
 
 
 void WFCEngine2D::set_label(int idx, const String& label){
-    labels[idx] = label.utf8().get_data();
+    wfc_generator.labels[idx] = label.utf8().get_data();
 }
 
 
 String WFCEngine2D::get_label(int idx){
-    return String::utf8(labels[idx].c_str());
+    return String::utf8(wfc_generator.labels[idx].c_str());
 }
 
 
