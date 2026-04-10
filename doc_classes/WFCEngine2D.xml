@@ -11,7 +11,7 @@
 		<method name="change_constraint_rule">
 			<return type="void" />
 			<param index="0" name="idx" type="int" />
-			<param index="1" name="direction" type="int" enum="WFCEngine2D.DIRECTIONS" />
+			<param index="1" name="direction" type="int" enum="WFCEngine2D.Directions" />
 			<param index="2" name="n_idx" type="int" />
 			<param index="3" name="allow" type="bool" />
 			<description>
@@ -20,6 +20,24 @@
 		<method name="collapse_cell">
 			<return type="void" />
 			<param index="0" name="cell" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="generate_variant_rule">
+			<return type="void" />
+			<param index="0" name="idx" type="int" />
+			<param index="1" name="variant" type="int" enum="WFCEngine2D.Variants" />
+			<description>
+			</description>
+		</method>
+		<method name="get_label">
+			<return type="String" />
+			<param index="0" name="idx" type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_result">
+			<return type="PackedInt32Array" />
 			<description>
 			</description>
 		</method>
@@ -32,7 +50,8 @@
 			<return type="WFCEngine2D" />
 			<param index="0" name="size" type="Vector2i" />
 			<param index="1" name="weights" type="PackedFloat64Array" />
-			<param index="2" name="periodic" type="bool" />
+			<param index="2" name="seed" type="int" />
+			<param index="3" name="periodic" type="bool" />
 			<description>
 			</description>
 		</method>
@@ -52,6 +71,13 @@
 			<description>
 			</description>
 		</method>
+		<method name="set_label">
+			<return type="void" />
+			<param index="0" name="idx" type="int" />
+			<param index="1" name="label" type="String" />
+			<description>
+			</description>
+		</method>
 		<method name="step">
 			<return type="bool" />
 			<description>
@@ -61,7 +87,7 @@
 	<members>
 		<member name="size" type="Vector2i" setter="" getter="get_size" default="Vector2i(1, 1)">
 		</member>
-		<member name="status" type="int" setter="" getter="get_status" enum="WFCEngine2D.STATUS" default="5">
+		<member name="status" type="int" setter="" getter="get_status" enum="WFCEngine2D.Status" default="5">
 		</member>
 	</members>
 	<signals>
@@ -77,25 +103,41 @@
 		</signal>
 	</signals>
 	<constants>
-		<constant name="NOT_INIT_STATUS" value="0" enum="STATUS">
+		<constant name="NOT_INIT_STATUS" value="0" enum="Status">
 		</constant>
-		<constant name="READY_STATUS" value="1" enum="STATUS">
+		<constant name="READY_STATUS" value="1" enum="Status">
 		</constant>
-		<constant name="RUNNING_STATUS" value="2" enum="STATUS">
+		<constant name="RUNNING_STATUS" value="2" enum="Status">
 		</constant>
-		<constant name="FINISHED_STATUS" value="3" enum="STATUS">
+		<constant name="FINISHED_STATUS" value="3" enum="Status">
 		</constant>
-		<constant name="CONTRADICTION_STATUS" value="4" enum="STATUS">
+		<constant name="CONTRADICTION_STATUS" value="4" enum="Status">
 		</constant>
-		<constant name="NOT_VALID_STATUS" value="5" enum="STATUS">
+		<constant name="NOT_VALID_STATUS" value="5" enum="Status">
 		</constant>
-		<constant name="UP" value="0" enum="DIRECTIONS">
+		<constant name="UP" value="0" enum="Directions">
 		</constant>
-		<constant name="DOWN" value="1" enum="DIRECTIONS">
+		<constant name="DOWN" value="1" enum="Directions">
 		</constant>
-		<constant name="LEFT" value="2" enum="DIRECTIONS">
+		<constant name="LEFT" value="2" enum="Directions">
 		</constant>
-		<constant name="RIGHT" value="3" enum="DIRECTIONS">
+		<constant name="RIGHT" value="3" enum="Directions">
+		</constant>
+		<constant name="IDENTITY" value="0" enum="Variants">
+		</constant>
+		<constant name="ROT90" value="1" enum="Variants">
+		</constant>
+		<constant name="ROT180" value="2" enum="Variants">
+		</constant>
+		<constant name="ROT270" value="3" enum="Variants">
+		</constant>
+		<constant name="VFLIP" value="4" enum="Variants">
+		</constant>
+		<constant name="HFLIP" value="5" enum="Variants">
+		</constant>
+		<constant name="HFLIPROT90" value="6" enum="Variants">
+		</constant>
+		<constant name="HFLIPROT270" value="7" enum="Variants">
 		</constant>
 	</constants>
 </class>

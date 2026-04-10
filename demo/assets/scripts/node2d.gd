@@ -6,7 +6,7 @@ extends Node2D
 func _ready() -> void:
 	print("hello")
 	var weights := PackedFloat64Array([1,1,1])
-	var wfc := WFCEngine2D.make_generator(Vector2i(20,20), weights, false)
+	var wfc := WFCEngine2D.make_generator(Vector2i(20,20), weights, false, 0)
 	wfc.stepped.connect(func(_wfc: WFCEngine2D):
 		print("step")
 	)
@@ -18,6 +18,7 @@ func _ready() -> void:
 	wfc.set_label(0, "sand")
 	wfc.set_label(1, "water")
 	wfc.set_label(2, "grass")
+	
 
 	wfc.change_constraint_rule(1, WFCEngine2D.Directions.UP, 2, false)
 	wfc.change_constraint_rule(1, WFCEngine2D.Directions.DOWN, 2, false)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="CustomChunkWFCIO" inherits="ChunkWFCIO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="reader">
+			<return type="PackedInt32Array" />
+			<param index="0" name="coords" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="writer">
+			<return type="void" />
+			<param index="0" name="coords" type="Vector2i" />
+			<param index="1" name="data" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="chunk_size" type="Vector2i" setter="set_chunk_size" getter="get_chunk_size" default="Vector2i(1, 1)">
+		</member>
+	</members>
+</class>
