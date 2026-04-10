@@ -79,7 +79,7 @@ Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedF
     for(const auto& e : weights){
         convert.emplace_back(static_cast<double>(e));
     }
-    return memnew(WFCEngine2D({size.x, size.y, 1}, convert, seed, periodic));
+    return memnew(WFCEngine2D({static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y), 1}, convert, seed, periodic));
 }
 
 

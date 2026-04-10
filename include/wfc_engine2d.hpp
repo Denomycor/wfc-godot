@@ -11,16 +11,15 @@
 
 namespace godot {
 
-class WFCEngine2D : public RefCounted{
+class WFCEngine2D : public RefCounted {
 	GDCLASS(WFCEngine2D, RefCounted)
 private:
 	wfc::WFC wfc_generator;
 	bool valid;
 
-    void _setup();
-
 protected:
 	static void _bind_methods();
+    void _setup();
 
 public:
 	enum Status {
