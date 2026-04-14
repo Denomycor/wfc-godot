@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="DiskChunkWFCIO" inherits="ChunkWFCIO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="flush_index">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="open" qualifiers="static">
+			<return type="DiskChunkWFCIO" />
+			<param index="0" name="index" type="String" />
+			<param index="1" name="chunks" type="String" />
+			<param index="2" name="size" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+	</methods>
+</class>

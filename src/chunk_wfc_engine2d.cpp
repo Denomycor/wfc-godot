@@ -17,9 +17,15 @@ using namespace godot;
 
 // ChunkWFCIO
 
+void ChunkWFCIO::_bind_methods(){
+    
+}
+
+
 ChunkWFCIO::ChunkWFCIO()
 :handler(std::make_shared<wfc::NullChunkWFCIO>())
 {}
+
 
 ChunkWFCIO::ChunkWFCIO(const std::shared_ptr<wfc::ChunkWFCIO>& p_handler)
 :handler(p_handler)

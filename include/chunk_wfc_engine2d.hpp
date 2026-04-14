@@ -17,6 +17,7 @@ class ChunkWFCIO : public RefCounted {
     GDCLASS(ChunkWFCIO, RefCounted);
 
 protected:
+	static void _bind_methods();
     ChunkWFCIO(const std::shared_ptr<wfc::ChunkWFCIO>& p_handler);
 
 public:

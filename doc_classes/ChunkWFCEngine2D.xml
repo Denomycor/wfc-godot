@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="ChunkWFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="generate_range">
+			<return type="void" />
+			<param index="0" name="from" type="Vector2i" />
+			<param index="1" name="to" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="get_chunk">
+			<return type="PackedInt32Array" />
+			<param index="0" name="coords" type="Vector2i" />
+			<description>
+			</description>
+		</method>
+		<method name="make_generator" qualifiers="static">
+			<return type="ChunkWFCEngine2D" />
+			<param index="0" name="chunk_size" type="Vector2i" />
+			<param index="1" name="weights" type="PackedFloat64Array" />
+			<param index="2" name="io" type="ChunkWFCIO" />
+			<param index="3" name="max_attempts" type="int" />
+			<param index="4" name="seed" type="int" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="chunk_size" type="Vector2i" setter="" getter="get_chunk_size" default="Vector2i(1, 1)">
+		</member>
+		<member name="valid" type="bool" setter="" getter="is_valid" default="false">
+		</member>
+	</members>
+	<signals>
+		<signal name="failed_chunk">
+			<param index="0" name="coords" type="Vector2i" />
+			<description>
+			</description>
+		</signal>
+		<signal name="successful_chunk">
+			<param index="0" name="coords" type="Vector2i" />
+			<param index="1" name="data" type="PackedInt32Array" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+</class>
