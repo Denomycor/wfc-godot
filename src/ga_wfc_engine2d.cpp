@@ -1,6 +1,7 @@
 #include "ga_wfc_engine2d.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/core/memory.hpp"
+#include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
 #include "utils.hpp"
@@ -76,13 +77,13 @@ double GAWFCEngine2D::fitness(const PackedInt32Array& individual) {
 }
 
 
-PackedInt32Array GAWFCEngine2D::run(){
+Array GAWFCEngine2D::run(){
     auto[genome, fit] = m_generator.run();
     PackedInt32Array buffer;
     for(auto v : genome){
 	buffer.append(v);
     }
-    return buffer;
+    return {buffer, fit};
 };
 
 
