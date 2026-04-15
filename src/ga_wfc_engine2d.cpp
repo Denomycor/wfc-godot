@@ -94,9 +94,9 @@ void GAWFCEngine2D::init_examples(const TypedArray<PackedInt32Array>& examples){
     for(int i = 0; i < examples.size(); i++){
 
         wfc::Array3D<unsigned int> buffer(x,y,z);
-	PackedInt32Array* e = Object::cast_to<PackedInt32Array>(examples[i]);
-        for(int j=0; j < e->size(); j++){
-            buffer.get_linear(j) = (*e)[j];
+	auto&& e = static_cast<PackedInt32Array>(examples[i]);
+        for(int j=0; j < e.size(); j++){
+            buffer.get_linear(j) = e[j];
         }
 	
 	b_examples.emplace_back(buffer);
