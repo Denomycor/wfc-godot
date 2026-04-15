@@ -18,7 +18,7 @@ using namespace godot;
 // ChunkWFCIO
 
 void ChunkWFCIO::_bind_methods(){
-    
+    // Supposed to be empty, nothing to register   
 }
 
 
@@ -37,7 +37,10 @@ ChunkWFCIO::ChunkWFCIO(const std::shared_ptr<wfc::ChunkWFCIO>& p_handler)
 
 void DiskChunkWFCIO::_bind_methods(){
     ClassDB::bind_method(D_METHOD("flush_index"), &DiskChunkWFCIO::flush_index);
+    ClassDB::bind_method(D_METHOD("is_valid"), &DiskChunkWFCIO::is_valid);
     ClassDB::bind_static_method("DiskChunkWFCIO", D_METHOD("open", "index", "chunks", "size"), &DiskChunkWFCIO::open);
+
+    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "valid"), "", "is_valid");
 }
 
 
@@ -67,6 +70,10 @@ void DiskChunkWFCIO::flush_index(){
     if(ptr) ptr->flush_index();
 }
 
+
+bool DiskChunkWFCIO::is_valid() const {
+    return valid;
+}
 
 
 //CustomChunkWFCIO

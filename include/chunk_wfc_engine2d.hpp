@@ -43,6 +43,7 @@ public:
 	~DiskChunkWFCIO();
 
 	void flush_index();
+    bool is_valid() const;
 };
 
 

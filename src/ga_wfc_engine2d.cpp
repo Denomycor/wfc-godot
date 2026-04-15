@@ -14,6 +14,22 @@ void GAWFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("fitness", "individual"), &GAWFCEngine2D::fitness);
     ClassDB::bind_method(D_METHOD("run"), &GAWFCEngine2D::run);
     ClassDB::bind_method(D_METHOD("init_examples", "examples"), &GAWFCEngine2D::init_examples);
+
+    ClassDB::bind_method(D_METHOD("get_wfc_size"), &GAWFCEngine2D::get_wfc_size);
+    ClassDB::bind_method(D_METHOD("get_max_generations"), &GAWFCEngine2D::get_max_generations);
+    ClassDB::bind_method(D_METHOD("get_population_size"), &GAWFCEngine2D::get_population_size);
+    ClassDB::bind_method(D_METHOD("get_boost_factor"), &GAWFCEngine2D::get_boost_factor);
+    ClassDB::bind_method(D_METHOD("get_generation_count"), &GAWFCEngine2D::get_generation_count);
+    ClassDB::bind_method(D_METHOD("is_valid"), &GAWFCEngine2D::is_valid);
+
+    ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "wfc_size"), "", "get_wfc_size");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "max_generations"), "", "get_max_generations");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "population_size"), "", "get_population_size");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "boost_factor"), "", "get_boost_factor");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "generation_count"), "", "get_generation_count");
+    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "valid"), "", "is_valid");
+
+    ADD_SIGNAL(MethodInfo("generation_ended", PropertyInfo(Variant::INT, "generation_count")));
 }
 
 
@@ -48,6 +64,9 @@ GAWFCEngine2D::GAWFCEngine2D()
 
 void GAWFCEngine2D::_setup(){
     m_generator.owner = this;
+    m_generator.generation_ended.connect([this](int generation_count){
+        emit_signal("generation_ended", generation_count);
+    });
 }
 
 
@@ -84,5 +103,36 @@ void GAWFCEngine2D::init_examples(const TypedArray<PackedInt32Array>& examples){
     }
 
     m_generator.init_examples(b_examples);
+}
+
+
+Vector2i GAWFCEngine2D::get_wfc_size() const {
+    auto[x,y,z] = m_generator.get_wfc_size();
+    return Vector2i(x,y);
+}
+
+
+int GAWFCEngine2D::get_max_generations() const {
+    return m_generator.get_max_generations();
+}
+
+
+int GAWFCEngine2D::get_population_size() const {
+    return m_generator.get_population_size();
+}
+
+
+int GAWFCEngine2D::get_boost_factor() const {
+    return m_generator.get_boost_factor();
+}
+
+
+int GAWFCEngine2D::get_generation_count() const {
+    return m_generator.get_generation_count();
+}
+
+
+bool GAWFCEngine2D::is_valid() const {
+    return valid;
 }
 

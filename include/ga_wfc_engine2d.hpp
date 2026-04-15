@@ -3,6 +3,7 @@
 #include "../wfc-cpp/include/ga_wfc.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
+#include "godot_cpp/variant/vector2i.hpp"
 
 
 namespace godot {
@@ -34,6 +35,13 @@ public:
     virtual double fitness(const PackedInt32Array& individual);
     virtual PackedInt32Array run();
     virtual void init_examples(const TypedArray<PackedInt32Array>& examples);
+
+    Vector2i get_wfc_size() const;
+    int get_max_generations() const;
+    int get_population_size() const;
+    int get_boost_factor() const;
+    int get_generation_count() const;
+    bool is_valid() const;
 
 };
 
