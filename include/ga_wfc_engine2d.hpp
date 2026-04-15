@@ -1,6 +1,8 @@
 #pragma once
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "../wfc-cpp/include/ga_wfc.hpp"
+#include "godot_cpp/variant/packed_int32_array.hpp"
+#include "godot_cpp/variant/typed_array.hpp"
 
 
 namespace godot {
@@ -10,11 +12,29 @@ class GAWFCEngine2D : public RefCounted {
 private:
     class GAWFCCustom : public wfc::GAWFC {
     public:
+        GAWFCEngine2D* owner;
         using wfc::GAWFC::GAWFC;
         double fitness(const GenomeT& result) const override;
     };
 
-    GAWFCCustom generator;
+    GAWFCCustom m_generator;
+    bool valid;
+
+protected:
+    static void _bind_methods();
+    void _setup();
+
+public:
+    GAWFCEngine2D();
+    GAWFCEngine2D(const wfc::Vec3u& wfc_size, int max_generations, int population_size, int seed, double boost_factor);
+    ~GAWFCEngine2D() = default;
+
+    static Ref<GAWFCEngine2D> make_generator(const Vector2i& wfc_size, int max_generations, int population_size, int seed, double boost_factor);
+
+    virtual double fitness(const PackedInt32Array& individual);
+    virtual PackedInt32Array run();
+    virtual void init_examples(const TypedArray<PackedInt32Array>& examples);
+
 };
 
 }
