@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="DiskChunkWFCIO" inherits="ChunkWFCIO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Implements a IO handler for [ChunkWFCEngine2D] that writes and reads from disk.
 	</brief_description>
 	<description>
+		The implementation of this handler requires 2 files. An index which pairs the chunk coordinates with their file offset and a data file which constains a bit stream of every saved generated chunk so far.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -10,6 +12,7 @@
 		<method name="flush_index">
 			<return type="void" />
 			<description>
+				Saves the index and data state to disk, automatically triggered after every new chunk write.
 			</description>
 		</method>
 		<method name="open" qualifiers="static">
@@ -18,6 +21,7 @@
 			<param index="1" name="chunks" type="String" />
 			<param index="2" name="size" type="Vector2i" />
 			<description>
+				Factory function, any instance created without this method is invalid.
 			</description>
 		</method>
 	</methods>

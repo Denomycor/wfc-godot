@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="CustomChunkWFCIO" inherits="ChunkWFCIO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Abstract class to allow custom implementation of an IO handler for [ChunkWFCEngine2D].
 	</brief_description>
 	<description>
+		Should not be instanciated, design to only be inherited from and overriding the reader and writer methods.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -11,6 +13,7 @@
 			<return type="PackedInt32Array" />
 			<param index="0" name="coords" type="Vector2i" />
 			<description>
+				The abstract reader method that [ChunkWFCEngine2D] calls.
 			</description>
 		</method>
 		<method name="writer">
@@ -18,6 +21,7 @@
 			<param index="0" name="coords" type="Vector2i" />
 			<param index="1" name="data" type="PackedInt32Array" />
 			<description>
+				The abstract writer method that [ChunkWFCEngine2D] calls.
 			</description>
 		</method>
 	</methods>

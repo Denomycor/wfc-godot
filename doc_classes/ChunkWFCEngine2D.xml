@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="ChunkWFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		Chunk-based Wave Function Collapse generator with parallel execution.
 	</brief_description>
 	<description>
+		A chunked extension of [WFCEngine2D] that divides the generation space into discrete regions ("chunks") and processes them independently, enabling parallelized procedural generation. Instead of operating on a single continuous grid, this engine partitions the domain into fixed-size chunks defined by [member chunk_size]. Each chunk is generated using an internal [WFCEngine2D] solver, while respecting boundary constraints imposed by neighboring chunks. This approach significantly improves scalability and allows large worlds to be generated incrementally or on-demand. The engine uses dependency injection via the [ChunkWFCIO] interface to abstract how chunk data is read and written. This allows integration with external storage systems, streaming pipelines, or custom world representations without modifying the core algorithm. If a chunk fails to converge within the configured attempt limit, it can be retried or reported via signals. Prefer generating chunkc through [generate_range] method as it manages the generation order to avoid conflicts at chunk edges.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -12,12 +14,14 @@
 			<param index="0" name="from" type="Vector2i" />
 			<param index="1" name="to" type="Vector2i" />
 			<description>
+				Generates all chunks in the inclusive coordinate range between [param from] and [param to]. Chunks are scheduled for parallel generation, with dependencies automatically resolved based on neighboring constraints. Already generated chunks may be reused depending on the [ChunkWFCIO] implementation.
 			</description>
 		</method>
 		<method name="get_chunk">
 			<return type="PackedInt32Array" />
 			<param index="0" name="coords" type="Vector2i" />
 			<description>
+				Returns the chunk at the provided coordinates, reading it through [ChunkWFCIO] if it is already available or generating it if not.
 			</description>
 		</method>
 		<method name="make_generator" qualifiers="static">
@@ -28,6 +32,15 @@
 			<param index="3" name="max_attempts" type="int" />
 			<param index="4" name="seed" type="int" />
 			<description>
+				Creates and initializes a new chunked WFC generator. Any instance created without this method is invalid.
+
+				[param chunk_size] defines the dimensions of each chunk.
+				[param weights] specifies the probability weights used for entropy calculation.
+				[param io] provides the data interface used for reading and writing chunk results.
+				[param max_attempts] controls how many times a chunk generation may be retried before being marked as failed.
+				[param seed] initializes the random number generator for deterministic output.
+
+				Returns a configured [ChunkWFCEngine2D] instance ready for generation.
 			</description>
 		</method>
 	</methods>

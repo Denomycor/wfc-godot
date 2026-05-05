@@ -1,6 +1,5 @@
 #include "register_types.hpp"
 #include "ga_wfc_engine2d.hpp"
-#include "gdexample.hpp"
 #include "wfc_engine2d.hpp"
 #include "chunk_wfc_engine2d.hpp"
 
@@ -15,7 +14,6 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	GDREGISTER_RUNTIME_CLASS(GDExample);
 	GDREGISTER_RUNTIME_CLASS(WFCEngine2D);
 	GDREGISTER_RUNTIME_CLASS(ChunkWFCIO);
 	GDREGISTER_RUNTIME_CLASS(DiskChunkWFCIO);

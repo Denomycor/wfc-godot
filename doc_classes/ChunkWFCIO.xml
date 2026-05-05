@@ -2,7 +2,9 @@
 <class name="ChunkWFCIO" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
 	</brief_description>
+		Interface for [ChunkWFCEngine2D] IO operations.
 	<description>
+		Defines how the algorithm saves and retrieves data. This class is only present in the documentation due to GDExtension plugin limitations. It should not be used or inherited from. For the default implementation see [DiskChunkWFCIO] and to create custom handlers see [CustomChunkWFCIO].
 	</description>
 	<tutorials>
 	</tutorials>

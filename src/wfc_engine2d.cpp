@@ -136,8 +136,8 @@ void WFCEngine2D::change_constraint_rule(int idx, Directions direction, int n_id
 }
 
 
-void WFCEngine2D::generate_variant_rule(int idx, Variants variant){
-    wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights);
+int WFCEngine2D::generate_variant_rule(int idx, Variants variant){
+    return wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights);
 }
 
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="WFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
-		Who can it be now
+		Implements a bitwise Wave Function Collapse algorithm.
 	</brief_description>
 	<description>
+	A C++ implementation of the Wave Function Collapse (WFC) algorithm using a bitwise representation for high performance and low memory overhead. This engine models each cell as a bitmask of possible states, allowing constraint propagation to be performed efficiently through bitwise operations instead of traditional set-based approaches. Adjacency rules are encoded as precomputed compatibility masks, enabling fast elimination of invalid states during propagation. The entropy of each cell is calculated using Shannon entropy, based on the weighted distribution of remaining valid states. To avoid recomputation overhead, entropy values are memoized and incrementally updated as the state space collapses, ensuring that the next observation step can be selected in near-constant time. Constraint propagation is implemented using a queue-based system that propagates changes to neighboring cells whenever a state is collapsed or reduced. Bitwise AND operations are used to intersect possibility masks with compatibility constraints, significantly accelerating propagation compared to naive implementations. This implementation is inspired by and based on the original Wave Function Collapse algorithm by Maxim Gumin: https://github.com/mxgmn/WaveFunctionCollapse Compared to the reference implementation, this version focuses on deterministic performance characteristics, cache-friendly data layouts, and reduced allocation overhead, making it suitable for real-time or large-scale procedural generation in 2D environments. The underlying source code can be browsed at: https://github.com/Denomycor/wfc-cpp.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -15,35 +16,34 @@
 			<param index="2" name="n_idx" type="int" />
 			<param index="3" name="allow" type="bool" />
 			<description>
+				Takes 2 tile ids and sets their constraint neighboring rule in a given direction.
 			</description>
 		</method>
 		<method name="collapse_cell">
 			<return type="void" />
 			<param index="0" name="cell" type="Vector2i" />
 			<description>
+				Takes a cell coordinate and randomly collapses it state into a single tile.
 			</description>
 		</method>
 		<method name="generate_variant_rule">
-			<return type="void" />
+			<return type="int" />
 			<param index="0" name="idx" type="int" />
 			<param index="1" name="variant" type="int" enum="WFCEngine2D.Variants" />
 			<description>
-			</description>
-		</method>
-		<method name="get_label">
-			<return type="String" />
-			<param index="0" name="idx" type="int" />
-			<description>
+				Add a new tile to the generator which is a 2D transformation of an existing tile
 			</description>
 		</method>
 		<method name="get_result">
 			<return type="PackedInt32Array" />
 			<description>
+				Returns the result of the WFC generation.
 			</description>
 		</method>
 		<method name="init">
 			<return type="void" />
 			<description>
+				Initializes the WFC generation, enabling all tiles for all cells.
 			</description>
 		</method>
 		<method name="make_generator" qualifiers="static">
@@ -53,34 +53,32 @@
 			<param index="2" name="seed" type="int" />
 			<param index="3" name="periodic" type="bool" />
 			<description>
+				Creates a new WFC generator of the given size and making use of the given tile weights. Any instance created without resorting to this method will not be valid.
 			</description>
 		</method>
 		<method name="propagate_constraints">
 			<return type="void" />
 			<param index="0" name="cell" type="Vector2i" />
 			<description>
+				Propagates the constraints starting from the given cell coordinate.
 			</description>
 		</method>
 		<method name="run">
 			<return type="bool" />
 			<description>
+				Runs all the steps of the algorithms. Returns true if the generation is successful and false if it failed prematurely.
 			</description>
 		</method>
 		<method name="select_cell">
 			<return type="Vector2i" />
 			<description>
-			</description>
-		</method>
-		<method name="set_label">
-			<return type="void" />
-			<param index="0" name="idx" type="int" />
-			<param index="1" name="label" type="String" />
-			<description>
+				Returns the coordinates of the cell with the smallest entropy.
 			</description>
 		</method>
 		<method name="step">
 			<return type="bool" />
 			<description>
+				Runs a single step of the generator. A step is comprised of selecting the cell with the smallest entropy, collapsing it to a single tile, propagating the constraints and evaluating the resulting state. Returns true if this was the last step.
 			</description>
 		</method>
 	</methods>
