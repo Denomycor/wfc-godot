@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="GAWFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+	</brief_description>
+	<description>
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="fitness">
+			<return type="float" />
+			<param index="0" name="individual" type="PackedInt32Array" />
+			<description>
+			</description>
+		</method>
+		<method name="init_examples">
+			<return type="void" />
+			<param index="0" name="examples" type="PackedInt32Array[]" />
+			<description>
+			</description>
+		</method>
+		<method name="make_generator" qualifiers="static">
+			<return type="GAWFCEngine2D" />
+			<param index="0" name="wfc_size" type="Vector2i" />
+			<param index="1" name="max_generations" type="int" />
+			<param index="2" name="population_size" type="int" />
+			<param index="3" name="seed" type="int" />
+			<param index="4" name="boost_factor" type="float" />
+			<description>
+			</description>
+		</method>
+		<method name="run">
+			<return type="Array" />
+			<description>
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="boost_factor" type="int" setter="" getter="get_boost_factor" default="1">
+		</member>
+		<member name="generation_count" type="int" setter="" getter="get_generation_count" default="0">
+		</member>
+		<member name="max_generations" type="int" setter="" getter="get_max_generations" default="1">
+		</member>
+		<member name="population_size" type="int" setter="" getter="get_population_size" default="1">
+		</member>
+		<member name="valid" type="bool" setter="" getter="is_valid" default="false">
+		</member>
+		<member name="wfc_size" type="Vector2i" setter="" getter="get_wfc_size" default="Vector2i(1, 1)">
+		</member>
+	</members>
+	<signals>
+		<signal name="generation_ended">
+			<param index="0" name="generation_count" type="int" />
+			<description>
+			</description>
+		</signal>
+	</signals>
+</class>

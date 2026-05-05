@@ -25,4 +25,8 @@
 			</description>
 		</method>
 	</methods>
+	<members>
+		<member name="valid" type="bool" setter="" getter="is_valid" default="false">
+		</member>
+	</members>
 </class>
