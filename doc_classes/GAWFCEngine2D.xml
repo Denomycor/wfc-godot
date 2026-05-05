@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="GAWFCEngine2D" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
 	<brief_description>
+		A Genetic algorithm making use of WFC to generate valid individuals.
 	</brief_description>
 	<description>
+		The Genetic Algorithm takes a set of examples and makes use of WFC to validate the new individuals, according to the constraint rules, after running crossover and mutation operations. By default it makes use of tournament selection and always keeps the best individual (elite) alive for the following generation. There is not default fitness implementation so it must be provided through inheritance override. It makes use of multiple threads to accelerate the WFC validation of all individuals in a generation.
 	</description>
 	<tutorials>
 	</tutorials>
@@ -11,12 +13,14 @@
 			<return type="float" />
 			<param index="0" name="individual" type="PackedInt32Array" />
 			<description>
+				Evaluate the fitness of an individual, must be overwritten in child class.
 			</description>
 		</method>
 		<method name="init_examples">
 			<return type="void" />
 			<param index="0" name="examples" type="PackedInt32Array[]" />
 			<description>
+				Provides the starting examples for the GA's first generation. Must match the population size defined during instanciation.
 			</description>
 		</method>
 		<method name="make_generator" qualifiers="static">
@@ -27,11 +31,13 @@
 			<param index="3" name="seed" type="int" />
 			<param index="4" name="boost_factor" type="float" />
 			<description>
+				Make a new generator with the provided arguments. Boost factor dicatates the likelyhood of the WFC generation selecting the tile suggested by the individual's genome.
 			</description>
 		</method>
 		<method name="run">
 			<return type="Array" />
 			<description>
+				Run the generator returning the best individual.
 			</description>
 		</method>
 	</methods>
