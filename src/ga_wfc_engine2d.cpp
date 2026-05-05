@@ -1,6 +1,7 @@
 #include "ga_wfc_engine2d.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/core/memory.hpp"
+#include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
 #include "utils.hpp"
@@ -76,13 +77,13 @@ double GAWFCEngine2D::fitness(const PackedInt32Array& individual) {
 }
 
 
-PackedInt32Array GAWFCEngine2D::run(){
+Array GAWFCEngine2D::run(){
     auto[genome, fit] = m_generator.run();
     PackedInt32Array buffer;
     for(auto v : genome){
 	buffer.append(v);
     }
-    return buffer;
+    return {buffer, fit};
 };
 
 
@@ -92,9 +93,8 @@ void GAWFCEngine2D::init_examples(const TypedArray<PackedInt32Array>& examples){
     auto[x,y,z] = m_generator.get_wfc_size();
     
     for(int i = 0; i < examples.size(); i++){
-
         wfc::Array3D<unsigned int> buffer(x,y,z);
-	PackedInt32Array e = (PackedInt32Array)examples[i];
+	auto&& e = static_cast<PackedInt32Array>(examples[i]);
         for(int j=0; j < e.size(); j++){
             buffer.get_linear(j) = e[j];
         }

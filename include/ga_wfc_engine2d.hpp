@@ -1,6 +1,7 @@
 #pragma once
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "../wfc-cpp/include/ga_wfc.hpp"
+#include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/packed_int32_array.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
 #include "godot_cpp/variant/vector2i.hpp"
@@ -33,7 +34,7 @@ public:
     static Ref<GAWFCEngine2D> make_generator(const Vector2i& wfc_size, int max_generations, int population_size, int seed, double boost_factor);
 
     virtual double fitness(const PackedInt32Array& individual);
-    virtual PackedInt32Array run();
+    virtual Array run();
     virtual void init_examples(const TypedArray<PackedInt32Array>& examples);
 
     Vector2i get_wfc_size() const;
