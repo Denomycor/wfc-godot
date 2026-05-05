@@ -14,12 +14,6 @@ func _ready() -> void:
 		print("finished")
 	)
 
-	# Not needed
-	wfc.set_label(0, "sand")
-	wfc.set_label(1, "water")
-	wfc.set_label(2, "grass")
-	
-
 	wfc.change_constraint_rule(1, WFCEngine2D.Directions.UP, 2, false)
 	wfc.change_constraint_rule(1, WFCEngine2D.Directions.DOWN, 2, false)
 	wfc.change_constraint_rule(1, WFCEngine2D.Directions.LEFT, 2, false)

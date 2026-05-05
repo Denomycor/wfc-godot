@@ -65,9 +65,6 @@ public:
     void change_constraint_rule(int idx, Directions direction, int n_idx, bool allow);
     void generate_variant_rule(int idx, Variants variant);
 
-    void set_label(int idx, const String& label);
-    String get_label(int idx);
-
     PackedInt32Array get_result();
 
     void init();

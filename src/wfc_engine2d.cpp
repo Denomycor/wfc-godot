@@ -47,8 +47,6 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
     ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "seed", "periodic"), &WFCEngine2D::make_generator);
     ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &WFCEngine2D::generate_variant_rule);
-    ClassDB::bind_method(D_METHOD("get_label", "idx"), &WFCEngine2D::get_label);
-    ClassDB::bind_method(D_METHOD("set_label", "idx", "label"), &WFCEngine2D::set_label);
     ClassDB::bind_method(D_METHOD("get_result"), &WFCEngine2D::get_result);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
@@ -139,17 +137,7 @@ void WFCEngine2D::change_constraint_rule(int idx, Directions direction, int n_id
 
 
 void WFCEngine2D::generate_variant_rule(int idx, Variants variant){
-    wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights, wfc_generator.labels);
-}
-
-
-void WFCEngine2D::set_label(int idx, const String& label){
-    wfc_generator.labels[idx] = label.utf8().get_data();
-}
-
-
-String WFCEngine2D::get_label(int idx){
-    return String::utf8(wfc_generator.labels[idx].c_str());
+    wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights);
 }
 
 
