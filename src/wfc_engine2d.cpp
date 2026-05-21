@@ -38,10 +38,16 @@ void WFCEngine2D::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("get_status"), &WFCEngine2D::get_status);
     ClassDB::bind_method(D_METHOD("get_size"), &WFCEngine2D::get_size);
+    ClassDB::bind_method(D_METHOD("get_weight", "idx"), &WFCEngine2D::get_weight);
+    ClassDB::bind_method(D_METHOD("set_weight", "idx", "value"), &WFCEngine2D::set_weight);
     ClassDB::bind_method(D_METHOD("select_cell"), &WFCEngine2D::select_cell);
     ClassDB::bind_method(D_METHOD("collapse_cell", "cell"), &WFCEngine2D::collapse_cell);
     ClassDB::bind_method(D_METHOD("propagate_constraints", "cell"), &WFCEngine2D::propagate_constraints);
     ClassDB::bind_method(D_METHOD("change_constraint_rule", "idx", "direction", "n_idx", "allow"), &WFCEngine2D::change_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_neighbor_constraint_rule", "idx", "n_idx", "allow"), &WFCEngine2D::change_tile_neighbor_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_constraint_rule", "idx", "allow"), &WFCEngine2D::change_tile_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_all_constraint_rule", "allow"), &WFCEngine2D::change_all_constraint_rule);
+    ClassDB::bind_method(D_METHOD("validate"), &WFCEngine2D::validate);
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
@@ -74,8 +80,8 @@ Vector2i WFCEngine2D::get_size(){
 
 Ref<WFCEngine2D> WFCEngine2D::make_generator(const Vector2i &size, const PackedFloat64Array &weights, int seed, bool periodic){
     wfc::TileWeights convert(weights.size());
-    for(const auto& e : weights){
-        convert.emplace_back(static_cast<double>(e));
+    for(int i=0; i < weights.size(); i++){
+        convert[i] = weights[i];
     }
     return memnew(WFCEngine2D({static_cast<unsigned int>(size.x), static_cast<unsigned int>(size.y), 1}, convert, seed, periodic));
 }
@@ -136,18 +142,49 @@ void WFCEngine2D::change_constraint_rule(int idx, Directions direction, int n_id
 }
 
 
+void WFCEngine2D::change_tile_constraint_rule(int idx, bool allow){
+    wfc_generator.constraints.change_all_rules_tile(idx, allow);
+}
+
+
+void WFCEngine2D::change_all_constraint_rule(bool allow){
+    wfc_generator.constraints.change_all_rules(allow);
+}
+
+
+void WFCEngine2D::change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow){
+    wfc_generator.constraints.change_all_rules_tile_neighbor(idx, n_idx, allow);
+}
+
+
 int WFCEngine2D::generate_variant_rule(int idx, Variants variant){
     return wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights);
+}
+
+
+void WFCEngine2D::set_weight(int idx, float value){
+    wfc_generator.weights[idx] = value;
+}
+
+
+float WFCEngine2D::get_weight(int idx){
+    return wfc_generator.weights[idx];
 }
 
 
 PackedInt32Array WFCEngine2D::get_result(){
     auto res = wfc_generator.get_result();
     PackedInt32Array out;
-    for(const auto& e : res){
-        out.push_back(e);
+    out.resize(res.size());
+    for(int i = 0; i< res.size(); i++){
+        out[i] = res.get_linear(i);
     }
     return out;
+}
+
+
+bool WFCEngine2D::validate(){
+    return wfc_generator.validate();
 }
 
 

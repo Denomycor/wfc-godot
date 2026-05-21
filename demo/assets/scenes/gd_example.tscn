@@ -1,26 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://cnlv4xepp46h1"]
+[gd_scene load_steps=5 format=3 uid="uid://cnlv4xepp46h1"]
 
 [ext_resource type="Script" uid="uid://qqhp5kqj7f7r" path="res://assets/scripts/node2d.gd" id="1_jbh2i"]
-[ext_resource type="Texture2D" uid="uid://ni13a4dueglh" path="res://assets/textures/grass.png" id="2_slel1"]
-[ext_resource type="Texture2D" uid="uid://bbh6ahopgp2b0" path="res://assets/textures/sand.png" id="3_l162e"]
-[ext_resource type="Texture2D" uid="uid://cmg23wdmfqn8t" path="res://assets/textures/water.png" id="4_8w7if"]
+[ext_resource type="Texture2D" uid="uid://nd4bxgej21o3" path="res://assets/textures/simple_grass_tileset.png" id="2_2rglv"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lmtpi"]
-texture = ExtResource("3_l162e")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q8wmx"]
+texture = ExtResource("2_2rglv")
+texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qh7hn"]
-texture = ExtResource("4_8w7if")
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8p5s8"]
-texture = ExtResource("2_slel1")
-0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_q78p2"]
-sources/0 = SubResource("TileSetAtlasSource_lmtpi")
-sources/1 = SubResource("TileSetAtlasSource_qh7hn")
-sources/2 = SubResource("TileSetAtlasSource_8p5s8")
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_q8wmx")
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_jbh2i")

@@ -63,7 +63,15 @@ public:
 	void propagate_constraints(const Vector2i& cell);
     
     void change_constraint_rule(int idx, Directions direction, int n_idx, bool allow);
+    void change_tile_constraint_rule(int idx, bool allow);
+    void change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow);
+    void change_all_constraint_rule(bool allow);
     int generate_variant_rule(int idx, Variants variant);
+
+    void set_weight(int idx, float value);
+    float get_weight(int idx);
+
+    bool validate();
 
     PackedInt32Array get_result();
 
