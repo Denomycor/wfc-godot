@@ -102,7 +102,6 @@ const OPPOSITE := {
 	WFCEngine2D.Directions.LEFT: WFCEngine2D.Directions.RIGHT,
 }
 
-
 func apply_constraints(sides: Array, wfc: WFCEngine2D):
 	for a in range(sides.size()):
 		for b in range(sides.size()):

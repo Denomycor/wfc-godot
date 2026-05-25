@@ -71,8 +71,6 @@ public:
     void set_weight(int idx, float value);
     float get_weight(int idx);
 
-    bool validate();
-
     PackedInt32Array get_result();
 
     void init();

@@ -47,7 +47,6 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("change_tile_neighbor_constraint_rule", "idx", "n_idx", "allow"), &WFCEngine2D::change_tile_neighbor_constraint_rule);
     ClassDB::bind_method(D_METHOD("change_tile_constraint_rule", "idx", "allow"), &WFCEngine2D::change_tile_constraint_rule);
     ClassDB::bind_method(D_METHOD("change_all_constraint_rule", "allow"), &WFCEngine2D::change_all_constraint_rule);
-    ClassDB::bind_method(D_METHOD("validate"), &WFCEngine2D::validate);
     ClassDB::bind_method(D_METHOD("init"), &WFCEngine2D::init);
     ClassDB::bind_method(D_METHOD("step"), &WFCEngine2D::step);
     ClassDB::bind_method(D_METHOD("run"), &WFCEngine2D::run);
@@ -180,11 +179,6 @@ PackedInt32Array WFCEngine2D::get_result(){
         out[i] = res.get_linear(i);
     }
     return out;
-}
-
-
-bool WFCEngine2D::validate(){
-    return wfc_generator.validate();
 }
 
 
