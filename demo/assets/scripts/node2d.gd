@@ -70,21 +70,29 @@ func _ready() -> void:
 		["D", "D", "DG", "GD"], # 12 - 180°
 		["GD", "D", "D", "DG"], # 13 - 270°
 	]
-	
+
 	apply_constraints(sides, wfc)
 
-	wfc.init()
-	var success := wfc.run()
-	
-	print(wfc.validate())
+	# NOTE: periodic=true means every cell — including the edges — must satisfy
+	# wrap-around constraints.  This tileset has strict "dirt must not touch grass"
+	# rules, so many random seeds lead to a contradiction before the grid is fully
+	# collapsed.  Retry with a fresh wave (same WFC object, RNG advances each run)
+	# until a solution is found.
+	var success := false
+	var attempts := 0
+	while not success and attempts < 50:
+		wfc.init()
+		success = wfc.run()
+		attempts += 1
 
 	if success:
+		print("WFC succeeded on attempt ", attempts)
 		var result := wfc.get_result()
-		print(result)
-
 		for i in range(result.size()):
 			var cell := linear_to_2d(wfc.size, i)
 			place_tile(cell, result[i])
+	else:
+		print("WFC could not find a periodic solution in ", attempts, " attempts.")
 
 
 const DIRS := [
@@ -144,4 +152,3 @@ func place_tile(cell: Vector2i, idx: int) -> void:
 		tilemap.set_cell(cell, 0, Vector2i(4,0), TileTransform.ROTATE_270)
 	else:
 		tilemap.set_cell(cell, 0, Vector2i(idx,0))
-
