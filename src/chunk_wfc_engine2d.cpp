@@ -76,6 +76,28 @@ bool DiskChunkWFCIO::is_valid() const {
 }
 
 
+// MemoryChunkWFCIO
+
+void MemoryChunkWFCIO::_bind_methods(){
+    ClassDB::bind_method(D_METHOD("is_valid"), &MemoryChunkWFCIO::is_valid);
+
+    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "valid"), "", "is_valid");
+}
+
+
+MemoryChunkWFCIO::MemoryChunkWFCIO()
+:ChunkWFCIO(std::make_shared<wfc::MemoryChunkWFCIO>())
+{}
+
+
+MemoryChunkWFCIO::~MemoryChunkWFCIO(){}
+
+
+bool MemoryChunkWFCIO::is_valid() const {
+    return true;
+}
+
+
 //CustomChunkWFCIO
 
 void CustomChunkWFCIO::_bind_methods(){
@@ -142,6 +164,10 @@ void ChunkWFCEngine2D::_bind_methods(){
     ClassDB::bind_method(D_METHOD("get_chunk_size"), &ChunkWFCEngine2D::get_chunk_size);
     ClassDB::bind_method(D_METHOD("generate_range", "from", "to"), &ChunkWFCEngine2D::generate_range);
     ClassDB::bind_method(D_METHOD("get_chunk", "coords"), &ChunkWFCEngine2D::get_chunk);
+    ClassDB::bind_method(D_METHOD("change_constraint_rule", "idx", "direction", "n_idx", "allow"), &ChunkWFCEngine2D::change_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_constraint_rule", "idx", "allow"), &ChunkWFCEngine2D::change_tile_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_neighbor_constraint_rule", "idx", "n_idx", "allow"), &ChunkWFCEngine2D::change_tile_neighbor_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_all_constraint_rule", "allow"), &ChunkWFCEngine2D::change_all_constraint_rule);
 
     ADD_SIGNAL(MethodInfo("successful_chunk", PropertyInfo(Variant::VECTOR2I, "coords"), PropertyInfo(Variant::PACKED_INT32_ARRAY, "data")));
     ADD_SIGNAL(MethodInfo("failed_chunk", PropertyInfo(Variant::VECTOR2I, "coords")));
@@ -153,8 +179,8 @@ void ChunkWFCEngine2D::_bind_methods(){
 
 Ref<ChunkWFCEngine2D> ChunkWFCEngine2D::make_generator(const Vector2i& chunk_size, const PackedFloat64Array& weights,Ref<ChunkWFCIO> io, int max_attempts, int seed){
     wfc::TileWeights convert(weights.size());
-    for(const auto& e : weights){
-        convert.emplace_back(static_cast<double>(e));
+    for(int i = 0; i < weights.size(); i++){
+        convert[i] = static_cast<double>(weights[i]);
     }
 	wfc::Vec3u size = {static_cast<unsigned int>(chunk_size.x), static_cast<unsigned int>(chunk_size.y), 1};
 
@@ -221,6 +247,26 @@ PackedInt32Array ChunkWFCEngine2D::get_chunk(const Vector2i& coords){
 	}else{
 		return {};
 	}
+}
+
+
+void ChunkWFCEngine2D::change_constraint_rule(int idx, int direction, int n_idx, bool allow){
+    wfc_generator.constraints.change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
+}
+
+
+void ChunkWFCEngine2D::change_tile_constraint_rule(int idx, bool allow){
+    wfc_generator.constraints.change_all_rules_tile(idx, allow);
+}
+
+
+void ChunkWFCEngine2D::change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow){
+    wfc_generator.constraints.change_all_rules_tile_neighbor(idx, n_idx, allow);
+}
+
+
+void ChunkWFCEngine2D::change_all_constraint_rule(bool allow){
+    wfc_generator.constraints.change_all_rules(allow);
 }
 
 

@@ -47,6 +47,20 @@ public:
 };
 
 
+class MemoryChunkWFCIO : public ChunkWFCIO {
+	GDCLASS(MemoryChunkWFCIO, ChunkWFCIO)
+
+protected:
+	static void _bind_methods();
+
+public:
+	MemoryChunkWFCIO();
+	~MemoryChunkWFCIO();
+
+	bool is_valid() const;
+};
+
+
 class CustomChunkWFCIO : public ChunkWFCIO {
     GDCLASS(CustomChunkWFCIO, ChunkWFCIO)
 
@@ -97,6 +111,11 @@ public:
 
 	void generate_range(const Vector2i& from, const Vector2i& to);
 	PackedInt32Array get_chunk(const Vector2i& coords);
+
+	void change_constraint_rule(int idx, int direction, int n_idx, bool allow);
+	void change_tile_constraint_rule(int idx, bool allow);
+	void change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow);
+	void change_all_constraint_rule(bool allow);
 
 };
 
