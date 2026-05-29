@@ -1,26 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://bchunkwfcdemo"]
+[gd_scene load_steps=5 format=3 uid="uid://bchunkwfcdemo"]
 
 [ext_resource type="Script" uid="uid://dy808girn4uy5" path="res://assets/scripts/chunk_wfc_demo.gd" id="1_demo"]
-[ext_resource type="Texture2D" uid="uid://cmg23wdmfqn8t" path="res://assets/textures/water.png" id="2_water"]
-[ext_resource type="Texture2D" uid="uid://bbh6ahopgp2b0" path="res://assets/textures/sand.png" id="3_sand"]
-[ext_resource type="Texture2D" uid="uid://ni13a4dueglh" path="res://assets/textures/grass.png" id="4_grass"]
+[ext_resource type="Texture2D" uid="uid://nd4bxgej21o3" path="res://assets/textures/simple_grass_tileset.png" id="2_tileset"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_water"]
-texture = ExtResource("2_water")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_main"]
+texture = ExtResource("2_tileset")
+texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sand"]
-texture = ExtResource("3_sand")
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_grass"]
-texture = ExtResource("4_grass")
-0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_main"]
-sources/0 = SubResource("TileSetAtlasSource_water")
-sources/1 = SubResource("TileSetAtlasSource_sand")
-sources/2 = SubResource("TileSetAtlasSource_grass")
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_main")
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_demo")
@@ -29,5 +23,5 @@ script = ExtResource("1_demo")
 tile_set = SubResource("TileSet_main")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(4000, 3000)
-zoom = Vector2(0.1, 0.1)
+position = Vector2(1500, 1000)
+zoom = Vector2(0.3, 0.3)

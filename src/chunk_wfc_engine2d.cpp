@@ -168,6 +168,9 @@ void ChunkWFCEngine2D::_bind_methods(){
     ClassDB::bind_method(D_METHOD("change_tile_constraint_rule", "idx", "allow"), &ChunkWFCEngine2D::change_tile_constraint_rule);
     ClassDB::bind_method(D_METHOD("change_tile_neighbor_constraint_rule", "idx", "n_idx", "allow"), &ChunkWFCEngine2D::change_tile_neighbor_constraint_rule);
     ClassDB::bind_method(D_METHOD("change_all_constraint_rule", "allow"), &ChunkWFCEngine2D::change_all_constraint_rule);
+    ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &ChunkWFCEngine2D::generate_variant_rule);
+    ClassDB::bind_method(D_METHOD("set_weight", "idx", "value"), &ChunkWFCEngine2D::set_weight);
+    ClassDB::bind_method(D_METHOD("get_weight", "idx"), &ChunkWFCEngine2D::get_weight);
 
     ADD_SIGNAL(MethodInfo("successful_chunk", PropertyInfo(Variant::VECTOR2I, "coords"), PropertyInfo(Variant::PACKED_INT32_ARRAY, "data")));
     ADD_SIGNAL(MethodInfo("failed_chunk", PropertyInfo(Variant::VECTOR2I, "coords")));
@@ -267,6 +270,21 @@ void ChunkWFCEngine2D::change_tile_neighbor_constraint_rule(int idx, int n_idx, 
 
 void ChunkWFCEngine2D::change_all_constraint_rule(bool allow){
     wfc_generator.constraints.change_all_rules(allow);
+}
+
+
+int ChunkWFCEngine2D::generate_variant_rule(int idx, int variant){
+    return wfc_generator.constraints.generate_variant(idx, static_cast<wfc::Variants2D>(variant), wfc_generator.weights);
+}
+
+
+void ChunkWFCEngine2D::set_weight(int idx, float value){
+    wfc_generator.weights[idx] = value;
+}
+
+
+float ChunkWFCEngine2D::get_weight(int idx){
+    return wfc_generator.weights[idx];
 }
 
 
