@@ -21,6 +21,7 @@ private:
 
     GAWFCCustom m_generator;
     bool valid;
+    Callable m_fitness_callable;
 
 protected:
     static void _bind_methods();
@@ -32,6 +33,8 @@ public:
     ~GAWFCEngine2D() = default;
 
     static Ref<GAWFCEngine2D> make_generator(const Vector2i& wfc_size, int max_generations, int population_size, int seed, double boost_factor);
+
+    void set_fitness_callable(const Callable& callable);
 
     virtual double fitness(const PackedInt32Array& individual);
     virtual Array run();

@@ -15,6 +15,7 @@ void GAWFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("fitness", "individual"), &GAWFCEngine2D::fitness);
     ClassDB::bind_method(D_METHOD("run"), &GAWFCEngine2D::run);
     ClassDB::bind_method(D_METHOD("init_examples", "examples"), &GAWFCEngine2D::init_examples);
+    ClassDB::bind_method(D_METHOD("set_fitness_callable", "callable"), &GAWFCEngine2D::set_fitness_callable);
 
     ClassDB::bind_method(D_METHOD("get_wfc_size"), &GAWFCEngine2D::get_wfc_size);
     ClassDB::bind_method(D_METHOD("get_max_generations"), &GAWFCEngine2D::get_max_generations);
@@ -50,14 +51,14 @@ Ref<GAWFCEngine2D> GAWFCEngine2D::make_generator(const Vector2i& wfc_size, int m
 
 
 GAWFCEngine2D::GAWFCEngine2D(const wfc::Vec3u& wfc_size, int max_generations, int population_size, int seed, double boost_factor)
-: m_generator(wfc_size, max_generations, population_size, seed, boost_factor), valid(true)
+: m_generator(wfc_size, max_generations, population_size, seed, boost_factor), valid(true), m_fitness_callable()
 {
     _setup();
 }
 
 
 GAWFCEngine2D::GAWFCEngine2D()
-:m_generator(wfc::Vec3u(1,1,1), 1, 1, 1, 1), valid(false)
+:m_generator(wfc::Vec3u(1,1,1), 1, 1, 1, 1), valid(false), m_fitness_callable()
 {
     _setup();
 }
@@ -71,9 +72,17 @@ void GAWFCEngine2D::_setup(){
 }
 
 
+void GAWFCEngine2D::set_fitness_callable(const Callable& callable) {
+    m_fitness_callable = callable;
+}
+
+
 double GAWFCEngine2D::fitness(const PackedInt32Array& individual) {
-    // this method must be overwriten
-    return 0.0;
+    if(m_fitness_callable.is_valid()){
+        return m_fitness_callable.call(individual);
+    }else{
+        return 0.0;
+    }
 }
 
 

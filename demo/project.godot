@@ -11,6 +11,10 @@ config_version=5
 [application]
 
 config/name="Demo"
-run/main_scene="res://assets/scenes/gd_example.tscn"
+run/main_scene="res://assets/scenes/ga_example.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/integer_division=0
