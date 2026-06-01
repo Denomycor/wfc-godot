@@ -17,6 +17,8 @@ private:
         GAWFCEngine2D* owner;
         using wfc::GAWFC::GAWFC;
         double fitness(const GenomeT& result) const override;
+        wfc::AdjacencyConstraints& get_constraints();
+        wfc::TileWeights& get_weights();
     };
 
     GAWFCCustom m_generator;
@@ -39,6 +41,14 @@ public:
     virtual double fitness(const PackedInt32Array& individual);
     virtual Array run();
     virtual void init_examples(const TypedArray<PackedInt32Array>& examples);
+
+    void change_constraint_rule(int idx, int direction, int n_idx, bool allow);
+    void change_tile_constraint_rule(int idx, bool allow);
+    void change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow);
+    void change_all_constraint_rule(bool allow);
+    int generate_variant_rule(int idx, int variant);
+    void set_weight(int idx, float value);
+    float get_weight(int idx);
 
     Vector2i get_wfc_size() const;
     int get_max_generations() const;

@@ -17,6 +17,14 @@ void GAWFCEngine2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init_examples", "examples"), &GAWFCEngine2D::init_examples);
     ClassDB::bind_method(D_METHOD("set_fitness_callable", "callable"), &GAWFCEngine2D::set_fitness_callable);
 
+    ClassDB::bind_method(D_METHOD("change_constraint_rule", "idx", "direction", "n_idx", "allow"), &GAWFCEngine2D::change_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_constraint_rule", "idx", "allow"), &GAWFCEngine2D::change_tile_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_tile_neighbor_constraint_rule", "idx", "n_idx", "allow"), &GAWFCEngine2D::change_tile_neighbor_constraint_rule);
+    ClassDB::bind_method(D_METHOD("change_all_constraint_rule", "allow"), &GAWFCEngine2D::change_all_constraint_rule);
+    ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &GAWFCEngine2D::generate_variant_rule);
+    ClassDB::bind_method(D_METHOD("set_weight", "idx", "value"), &GAWFCEngine2D::set_weight);
+    ClassDB::bind_method(D_METHOD("get_weight", "idx"), &GAWFCEngine2D::get_weight);
+
     ClassDB::bind_method(D_METHOD("get_wfc_size"), &GAWFCEngine2D::get_wfc_size);
     ClassDB::bind_method(D_METHOD("get_max_generations"), &GAWFCEngine2D::get_max_generations);
     ClassDB::bind_method(D_METHOD("get_population_size"), &GAWFCEngine2D::get_population_size);
@@ -32,6 +40,16 @@ void GAWFCEngine2D::_bind_methods() {
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "valid"), "", "is_valid");
 
     ADD_SIGNAL(MethodInfo("generation_ended", PropertyInfo(Variant::INT, "generation_count")));
+}
+
+
+wfc::AdjacencyConstraints& GAWFCEngine2D::GAWFCCustom::get_constraints() {
+    return m_constraints;
+}
+
+
+wfc::TileWeights& GAWFCEngine2D::GAWFCCustom::get_weights() {
+    return m_weights;
 }
 
 
@@ -112,6 +130,41 @@ void GAWFCEngine2D::init_examples(const TypedArray<PackedInt32Array>& examples){
     }
 
     m_generator.init_examples(b_examples);
+}
+
+
+void GAWFCEngine2D::change_constraint_rule(int idx, int direction, int n_idx, bool allow){
+    m_generator.get_constraints().change_rule(idx, static_cast<wfc::Directions>(direction), n_idx, allow);
+}
+
+
+void GAWFCEngine2D::change_tile_constraint_rule(int idx, bool allow){
+    m_generator.get_constraints().change_all_rules_tile(idx, allow);
+}
+
+
+void GAWFCEngine2D::change_tile_neighbor_constraint_rule(int idx, int n_idx, bool allow){
+    m_generator.get_constraints().change_all_rules_tile_neighbor(idx, n_idx, allow);
+}
+
+
+void GAWFCEngine2D::change_all_constraint_rule(bool allow){
+    m_generator.get_constraints().change_all_rules(allow);
+}
+
+
+int GAWFCEngine2D::generate_variant_rule(int idx, int variant){
+    return m_generator.get_constraints().generate_variant(idx, static_cast<wfc::Variants2D>(variant), m_generator.get_weights());
+}
+
+
+void GAWFCEngine2D::set_weight(int idx, float value){
+    m_generator.get_weights()[idx] = value;
+}
+
+
+float GAWFCEngine2D::get_weight(int idx){
+    return m_generator.get_weights()[idx];
 }
 
 
