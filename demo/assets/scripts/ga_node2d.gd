@@ -2,11 +2,14 @@ extends Node2D
 
 @onready var tilemap: TileMapLayer = $TileMapLayer
 
-const MAP_SIZE        := Vector2i(32, 32)
+const MAP_SIZE        := Vector2i(48, 48)
 const POPULATION_SIZE := 20
 const MAX_GENERATIONS := 100
 const BOOST_FACTOR    := 120.0
 const NOISE           := 0.10
+
+enum FitnessMode { GRASS_EDGE, HORIZONTAL_SPLIT, CHECKERBOARD, DIAGONAL_SPLIT, RINGS, CROSS }
+const ACTIVE_FITNESS := FitnessMode.DIAGONAL_SPLIT
 
 const DIRS := [
 	WFCEngine2D.Directions.UP,
@@ -56,33 +59,21 @@ func _make_radial(rng: RandomNumberGenerator) -> PackedInt32Array:
 	return m
 
 
-# Smooth radial fitness: grass rewarded far from center, dirt rewarded near center.
-# Multiplied by 4*f_grass*f_dirt so any uniform map scores zero.
-func _grass_edge_fitness(individual: PackedInt32Array) -> float:
-	var cx := (MAP_SIZE.x - 1) * 0.5
-	var cy := (MAP_SIZE.y - 1) * 0.5
-	var max_dist := sqrt(cx * cx + cy * cy)
-	var score := 0.0
-	var n_grass := 0
-	var n_dirt := 0
-	for i in individual.size():
-		var x := i % MAP_SIZE.x
-		var y := i / MAP_SIZE.x
-		var dx := float(x) - cx
-		var dy := float(y) - cy
-		var dist := sqrt(dx * dx + dy * dy) / max_dist
-		var tile := individual[i]
-		if tile == 1:
-			score += dist * dist
-			n_grass += 1
-		elif tile == 0:
-			score += (1.0 - dist) * (1.0 - dist)
-			n_dirt += 1
-	var n := float(individual.size())
-	# Require at least 5% of cells to be each pure type; don't reward 50/50 balance.
-	var min_each := 0.05 * n
-	var diversity := minf(n_grass / min_each, 1.0) * minf(n_dirt / min_each, 1.0)
-	return (score / n) * diversity
+func _make_fitness_strategy() -> GAFitnessStrategy:
+	match ACTIVE_FITNESS:
+		FitnessMode.GRASS_EDGE:
+			return GrassEdgeFitness.new(MAP_SIZE)
+		FitnessMode.HORIZONTAL_SPLIT:
+			return HorizontalSplitFitness.new(MAP_SIZE)
+		FitnessMode.CHECKERBOARD:
+			return CheckerboardFitness.new(MAP_SIZE, 8)
+		FitnessMode.DIAGONAL_SPLIT:
+			return DiagonalSplitFitness.new(MAP_SIZE)
+		FitnessMode.RINGS:
+			return RingFitness.new(MAP_SIZE, 3)
+		FitnessMode.CROSS:
+			return CrossFitness.new(MAP_SIZE, 6)
+	return GrassEdgeFitness.new(MAP_SIZE)
 
 
 func _on_generation_ended(gen: int) -> void:
@@ -98,8 +89,10 @@ func _ready() -> void:
 	for _k in range(POPULATION_SIZE):
 		examples.append(_make_radial(rng))
 
+	var strategy := _make_fitness_strategy()
+
 	var ga := GAWFCEngine2D.make_generator(MAP_SIZE, MAX_GENERATIONS, POPULATION_SIZE, randi(), BOOST_FACTOR)
-	ga.set_fitness_callable(_grass_edge_fitness)
+	ga.set_fitness_callable(strategy.calculate)
 	ga.generation_ended.connect(_on_generation_ended)
 
 	# init_examples derives initial weights/constraints from the 5-tile seed maps
@@ -143,7 +136,7 @@ func _ready() -> void:
 	]
 	apply_constraints(sides, ga)
 
-	print("GA-WFC grass-edge demo: %d gens, pop %d…" % [MAX_GENERATIONS, POPULATION_SIZE])
+	print("GA-WFC %s demo: %d gens, pop %d…" % [strategy.label(), MAX_GENERATIONS, POPULATION_SIZE])
 	var t0 := Time.get_ticks_msec()
 	var result: Array = ga.run()
 	var elapsed := (Time.get_ticks_msec() - t0) / 1000.0
@@ -152,20 +145,7 @@ func _ready() -> void:
 	var best_fitness: float = result[1]
 	print("Done in %.1f s  |  best fitness = %.3f" % [elapsed, best_fitness])
 
-	var cx := (MAP_SIZE.x - 1) * 0.5
-	var cy := (MAP_SIZE.y - 1) * 0.5
-	var max_dist := sqrt(cx * cx + cy * cy)
-	var ng := 0; var nd := 0; var sum_dg := 0.0; var sum_dd := 0.0
-	for i in best_genome.size():
-		var x := i % MAP_SIZE.x; var y := i / MAP_SIZE.x
-		var dist := sqrt(pow(x - cx, 2) + pow(y - cy, 2)) / max_dist
-		if best_genome[i] == 1: ng += 1; sum_dg += dist
-		elif best_genome[i] == 0: nd += 1; sum_dd += dist
-	var n := float(best_genome.size())
-	print("  grass: %.1f%%  dirt: %.1f%%  transition: %.1f%%" % [ng/n*100, nd/n*100, (n-ng-nd)/n*100])
-	print("  mean dist  grass=%.3f  dirt=%.3f  (want grass > dirt)" % [
-		sum_dg / ng if ng > 0 else 0.0,
-		sum_dd / nd if nd > 0 else 0.0])
+	strategy.report(best_genome)
 
 	for i in range(best_genome.size()):
 		var x := i % MAP_SIZE.x
