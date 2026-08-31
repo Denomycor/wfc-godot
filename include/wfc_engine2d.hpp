@@ -72,6 +72,7 @@ public:
     float get_weight(int idx);
 
     PackedInt32Array get_result();
+    PackedInt32Array get_cell_options(const Vector2i& cell);
 
     void init();
     bool step();

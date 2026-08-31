@@ -53,6 +53,7 @@ void WFCEngine2D::_bind_methods() {
     ClassDB::bind_static_method("WFCEngine2D", D_METHOD("make_generator", "size", "weights", "seed", "periodic"), &WFCEngine2D::make_generator);
     ClassDB::bind_method(D_METHOD("generate_variant_rule", "idx", "variant"), &WFCEngine2D::generate_variant_rule);
     ClassDB::bind_method(D_METHOD("get_result"), &WFCEngine2D::get_result);
+    ClassDB::bind_method(D_METHOD("get_cell_options", "cell"), &WFCEngine2D::get_cell_options);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "status", PROPERTY_HINT_ENUM, "NOT_INIT_STATUS,READY_STATUS,RUNNING_STATUS,FINISHED_STATUS,CONTRADICTION_STATUS,NOT_VALID_STATUS"), "", "get_status");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2I, "size"), "", "get_size");
@@ -168,6 +169,19 @@ void WFCEngine2D::set_weight(int idx, float value){
 
 float WFCEngine2D::get_weight(int idx){
     return wfc_generator.weights[idx];
+}
+
+
+PackedInt32Array WFCEngine2D::get_cell_options(const Vector2i& cell){
+    const auto& wave = wfc_generator.get_wave();
+    const auto& cell_state = wave.get(cell.x, cell.y, 0);
+    PackedInt32Array result;
+    for (std::size_t i = 0; i < cell_state.size(); i++) {
+        if (cell_state.test(i)) {
+            result.push_back(static_cast<int32_t>(i));
+        }
+    }
+    return result;
 }
 
 
